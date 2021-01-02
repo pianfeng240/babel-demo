@@ -14,6 +14,8 @@ class Cat {
   }
 }
 
+const a = [1,2].includes(2)
+
 var promise = new Promise();
 promise.resolve('ok')
 
