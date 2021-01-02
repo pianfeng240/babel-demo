@@ -40,3 +40,8 @@ promise.resolve('ok');
 async function asycFunc() {
   await promise();
 }
+
+const p = {
+  name: 'test'
+};
+const name = (p === null || p === void 0 ? void 0 : p.name) ?? 'unkown';

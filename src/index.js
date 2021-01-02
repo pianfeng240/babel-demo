@@ -22,3 +22,8 @@ promise.resolve('ok')
 async function asycFunc() {
   await promise();
 }
+
+const p = {
+  name: 'test'
+}
+const name = p?.name ?? 'unkown'

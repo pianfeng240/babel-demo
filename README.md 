@@ -1,0 +1,84 @@
+[toc]
+
+当前版本 7.12.10
+
+**@babel/polyfill被弃用了**
+**推荐用core-js@3**
+
+安装基础依赖：
+```js
+npm i --save-dev @babel/cli @babel/core @babel/preset-env
+```
+
+## 测试
+
+源代码见babel-demo文件夹
+
+### 配置空
+编译后无变化
+
+### 引入预设@babel/preset-env
+默认转换所有es2015+
+
+![6b77b749d4be36c4216c6f7efb697042.png](evernotecid://30E8BF6D-B7AA-473C-A611-BA3611D884F5/appyinxiangcom/25864315/ENResource/p1058)
+
+const、class、async语法转了，但未引入polyfill
+
+#### 设置useBuiltIns
+> npm i core-js
+
+```js
+"useBuiltIns": "usage",
+"corejs": '3.8.1'
+```
+![b24612f00fa512c11b2dd5603f1a3fb1.png](evernotecid://30E8BF6D-B7AA-473C-A611-BA3611D884F5/appyinxiangcom/25864315/ENResource/p1059)
+
+转码后引入了更多的core-js的包，比如es.map, es.promise
+
+### 引入插件transform-runtime
+该插件是开发时用
+> npm i --save-dev @babel/plugin-transform-runtime
+
+上面编译后的代码有一些是babel加的helper，比如_classCallCheck,每个文件都会生成，通过插件可以都引用@babel/runtime/helpers。
+
+还可以创建沙箱环境，避免全局污染
+
+![69f8f74e5ae0bb0ce4da47de209c15bc.png](evernotecid://30E8BF6D-B7AA-473C-A611-BA3611D884F5/appyinxiangcom/25864315/ENResource/p1062)
+
+所以生产环境需要安装@babel/runtime
+
+> npm i @babel/runtime
+
+#### 设置corejs:3
+上面代码Promise变量名没有处理，使用corejs v3后编译，
+![15292dc92a77877273a8d748ed696bf2.png](evernotecid://30E8BF6D-B7AA-473C-A611-BA3611D884F5/appyinxiangcom/25864315/ENResource/p1063)
+
+引用的包变成了@babel/runtime-corejs3
+
+> @babel/runtime-corejs3
+
+npm uninstall @babel/runtime，发现还是存在包，查看package.lock, 由regenerator-transform -> @bable/plugin-transform-regenerator -> preset/env 引入。 
+todo: 是否会导致包变大？？
+
+### 引入.browserslist.rc
+
+> Chrome > 38
+> iOS > 7
+
+配置浏览器属性，可以减少polyfill大小
+
+## todo
+
+1. 设置Chrome为最新，Promise的polyfill为什么一直在
+2. @babel/polyfill弃用后，官方推荐直接引入
+```js
+import "core-js/stable";
+import "regenerator-runtime/runtime";
+```
+![f390507e61f0194bf0a2e713d40e3fcb.png](evernotecid://30E8BF6D-B7AA-473C-A611-BA3611D884F5/appyinxiangcom/25864315/ENResource/p1064)
+会导致引入regenerator-runtime导入两次，看起来应该不需要手动引入才对，？？
+
+
+
+
+
